@@ -1,0 +1,17 @@
+# tests/test_worker.py
+import unittest
+from worker.worker import start_scraping_worker
+from unittest.mock import patch
+
+class TestWorker(unittest.TestCase):
+
+    @patch('worker.worker.check_for_new_jobs')  # Mock the check_for_new_jobs function
+    def test_worker_runs_periodically(self, mock_check):
+        # Simulate running the worker
+        start_scraping_worker(interval=1)
+
+        # Check that check_for_new_jobs was called at least once
+        self.assertGreater(mock_check.call_count, 0)
+
+if __name__ == '__main__':
+    unittest.main()

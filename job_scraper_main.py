@@ -11,24 +11,26 @@ setup_logging()
 logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
-    logger.info("Starting the web scraper worker")
     ensure_directories_exist()
     create_table()
+    logger.info("Starting the web scraper worker")
 
     # Log the total job count before starting
     logger.info("Total jobs in the database: %s", count_jobs())
 
     # Start the worker thread to run the scraper periodically
-    worker_thread = threading.Thread(target=start_scraping_worker, daemon=True)
+    worker_thread = threading.Thread(target=start_scraping_worker(20), daemon=True)
     worker_thread.start()
 
     # Keep the main thread alive
     try:
-        while True:
+        while worker_thread.is_alive:
             time.sleep(1)
     except KeyboardInterrupt:
-        logger.info("Shutdown signal received. Shutting down...")
-        
+        logger.info("Shutdown signal received. Stopping the worker...")
+        stop_worker.set()
+        worker_thread.join() # Wait for worker thread to finish
+        logger.info("Worker stopped gracefully.")
         # Set the stop flag or handle the thread shutdown properly
         # Set the stop flag to True if using it in your worker
         stop_worker = True

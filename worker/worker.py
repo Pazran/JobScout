@@ -9,8 +9,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-# Flag to stop worker
-stop_worker = False
+stop_worker = threading.Event()  # Use threading.Event for graceful stopping
 
 def check_for_new_jobs():
     """Check for new jobs and add them to the database if not already present."""
@@ -42,11 +41,17 @@ def check_for_new_jobs():
 
 def start_scraping_worker(interval=random.uniform(60, 120)):
     """Start the worker that runs periodically to check for new jobs."""
-    global stop_worker
-
     # Ensure the database table exists
     create_table()
 
-    while not stop_worker:
-        check_for_new_jobs()
-        time.sleep(interval)  # Wait for the specified interval before checking again
+    #global stop_worker
+    while not stop_worker.is_set(): # Check if stop signal is set
+        try:
+            check_for_new_jobs()
+            stop_worker.wait(interval) # Wait for interval or stop signal
+        except KeyboardInterrupt:
+            logger.info("Shutdown signal received. Stopping worker gracefully.")
+            stop_worker.set() # Set stop signal
+            break
+        except Exception as e:
+            logger.error("An error occured: %s", e)

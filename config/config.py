@@ -1,4 +1,5 @@
 import logging
+import os
 
 # Toggle to enable or disable robots.txt check
 CHECK_ROBOTS = False
@@ -40,3 +41,12 @@ def setup_logging():
 
     # Set the default logging level
     logger.setLevel(logging.DEBUG)  # Default to DEBUG, so that we get all levels
+
+# Initialize folders
+def ensure_directories_exist():
+    """Ensure required directories exist."""
+    required_dirs = ['data', 'logs']
+    for directory in required_dirs:
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+            print(f"Created missing directory: {directory}")

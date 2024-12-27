@@ -2,7 +2,7 @@ import threading
 import time
 from worker.worker import start_scraping_worker
 import logging
-from config.config import setup_logging
+from config.config import setup_logging, ensure_directories_exist
 from database.database import create_table, count_jobs
 
 # Setup logging for the whole app
@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
     logger.info("Starting the web scraper worker")
+    ensure_directories_exist()
     create_table()
 
     # Log the total job count before starting

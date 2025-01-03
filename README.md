@@ -3,6 +3,9 @@
 
 JobScout is a web scraper that fetches job listings from a website (currently only for Jobstreet), stores them in a SQLite database, and allows periodic and continuous scraping for new job listings. The scraper checks for new jobs, inserts them into the database, and handles job listings in a structured format. It is designed as a modular base that can be easily adapted for other types of content or products. It allows for easy extension to send scraped data to various platforms like Telegram, Discord, or other APIs. This makes it a powerful tool not only for scraping job listings but also for extracting and sharing content related to different products or services. The sky is the limit my friends.
 
+# Adaptation
+Check out this [JobScout Bot](https://t.me/JSScraperBot) telegram bot that I made using this scraper as the data collector with LLM integration with /chat command.
+
 ## Demo Video
 Watch the demo video for how it runs:
 
